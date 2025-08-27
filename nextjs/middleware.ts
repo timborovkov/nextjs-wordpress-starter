@@ -1,26 +1,40 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import type { Locale } from "@/lib/dict";
-import { defaultLocale, detectLocaleFromURL, languages } from "@/lib/dict";
+// Type for available locales
+type Locale = string;
 
-// List of available locales
-const locales = languages.map((lang) => lang.code);
+// Default locale fallback - English only
+const defaultLocale: Locale = "en";
+
+// Only support English locale
+const supportedLocales: Locale[] = ["en"];
+
+/**
+ * Detect locale from URL path
+ * @param url - The request URL
+ * @returns The locale from the URL or null if not found
+ */
+function detectLocaleFromURL(url: string): Locale | null {
+  const pathname = new URL(url).pathname;
+  const segments = pathname.split("/").filter(Boolean);
+
+  if (segments.length > 0 && supportedLocales.includes(segments[0])) {
+    return segments[0];
+  }
+
+  return null;
+}
 
 /**
  * Get the preferred locale from the Accept-Language header
  * @param request - The request object
- * @returns The users preferred locale
+ * @returns The users preferred locale (always English for now)
  */
 function getLocaleFromHeader(request: NextRequest): Locale {
-  const acceptLanguage = request.headers.get("accept-language");
-
-  const preferredLocale: Locale | null = acceptLanguage
-    ?.split(",")
-    .map((lang) => lang.split(";")[0].trim())
-    .find((lang) => locales.includes(lang as Locale)) as Locale;
-
-  return preferredLocale ?? defaultLocale;
+  // For now, always return English
+  // In the future, this could be enhanced to parse Accept-Language header
+  return defaultLocale;
 }
 
 /**
@@ -30,8 +44,8 @@ function getLocaleFromHeader(request: NextRequest): Locale {
  */
 function getLocaleFromCookies(request: NextRequest): Locale | null {
   const cookieLocale = request.cookies.get("locale")?.value;
-  if (cookieLocale && locales.includes(cookieLocale as Locale)) {
-    return cookieLocale as Locale;
+  if (cookieLocale && supportedLocales.includes(cookieLocale)) {
+    return cookieLocale;
   }
   return null;
 }
