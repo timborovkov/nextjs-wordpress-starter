@@ -381,11 +381,3 @@ export interface DictionaryAllLanguagesResponse {
   total_count: number;
   timestamp: number;
 }
-
-export interface DictionaryGroupResponse {
-  group: string;
-  language: string;
-  translations: DictionaryTranslation;
-  count: number;
-  timestamp: number;
-}
