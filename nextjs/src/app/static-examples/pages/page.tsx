@@ -24,7 +24,7 @@ export default async function Page() {
         <Prose className='mb-8'>
           <h2>All Pages</h2>
           <ul className='grid'>
-            {pages.map((page: any) => (
+            {pages.map((page) => (
               <li key={page.id}>
                 <Link href={`/pages/${page.slug}`}>{page.title.rendered}</Link>
               </li>

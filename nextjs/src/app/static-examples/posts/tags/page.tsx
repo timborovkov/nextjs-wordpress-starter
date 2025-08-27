@@ -24,7 +24,7 @@ export default async function Page() {
         <Prose className='mb-8'>
           <h2>All Tags</h2>
           <ul className='grid'>
-            {tags.map((tag: any) => (
+            {tags.map((tag) => (
               <li key={tag.id}>
                 <Link href={`/posts/?tag=${tag.id}`}>{tag.name}</Link>
               </li>

@@ -12,8 +12,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-// Add this import for the Button component
-
 interface Author {
   id: number;
   name: string;
@@ -49,10 +47,14 @@ export function FilterPosts({
   const router = useRouter();
 
   const handleFilterChange = (type: string, value: string) => {
-    console.log(`Filter changed: ${type} -> ${value}`);
+    // console.log(`Filter changed: ${type} -> ${value}`);
     const newParams = new URLSearchParams(window.location.search);
     newParams.delete('page');
-    value === 'all' ? newParams.delete(type) : newParams.set(type, value);
+    if (value === 'all') {
+      newParams.delete(type);
+    } else {
+      newParams.set(type, value);
+    }
 
     router.push(`/posts?${newParams.toString()}`);
   };

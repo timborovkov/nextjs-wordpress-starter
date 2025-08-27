@@ -332,7 +332,7 @@ export interface MenuItem {
 
 // ACF Fields Type
 export interface ACFFields {
-  [key: string]: any;
+  [key: string]: string | number | boolean | null | undefined | ACFFields;
 }
 
 // Extended Post and Page types with ACF fields
@@ -342,12 +342,6 @@ export interface PostWithACF extends Post {
 
 export interface PageWithACF extends Page {
   acf?: ACFFields;
-}
-
-// Find Post by Path Response
-export interface FindPostResponse extends Post {
-  // This will include all standard post fields plus any additional fields
-  // The actual structure depends on the post type and ACF fields
 }
 
 // Dictionary Translation Types

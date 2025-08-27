@@ -24,7 +24,7 @@ export default async function Page() {
         <Prose className='mb-8'>
           <h2>All Categories</h2>
           <ul className='grid'>
-            {categories.map((category: any) => (
+            {categories.map((category) => (
               <li key={category.id}>
                 <Link href={`/posts/?category=${category.id}`}>
                   {category.name}
