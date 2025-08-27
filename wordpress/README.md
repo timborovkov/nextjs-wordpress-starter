@@ -118,6 +118,7 @@ The database includes a default user for initial access:
 - **Email:** `nextjs-wordpress-starter@example.com`
 - **Username:** `r3ED9L0E8M`
 - **Password:** `no77kZ19FL52hepH5Pf7UvRKaP4`
+- **Application Password:** `GM4V CgcO Bxbj uxzK sIEL 6nHw`
 
 **Important:** Change this password immediately after setup for security.
 
