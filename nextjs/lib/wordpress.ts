@@ -3,6 +3,7 @@
 // Types are imported from `wp.d.ts`
 
 import querystring from "query-string";
+import https from "https";
 import type {
   Post,
   Category,
@@ -19,6 +20,21 @@ const applicationPassword = process.env.WORDPRESS_APPLICATION_PASSWORD ?? "";
 const credentials = Buffer.from(`${username}:${applicationPassword}`).toString(
   "base64"
 );
+
+// Custom fetch function that handles SSL for local development
+async function customFetch(url: string, options: RequestInit = {}) {
+  if (process.env.NODE_ENV === "development" && url.startsWith("https://")) {
+    // For local development with HTTPS, use a custom agent that ignores SSL
+    const httpsAgent = new https.Agent({
+      rejectUnauthorized: false,
+    });
+
+    // @ts-ignore - Adding custom agent for development
+    options.agent = httpsAgent;
+  }
+
+  return fetch(url, options);
+}
 
 if (!baseUrl) {
   throw new Error("WORDPRESS_URL environment variable is not defined");
@@ -52,7 +68,7 @@ async function wordpressFetch<T>(
   }`;
   const userAgent = "Next.js WordPress Client";
 
-  const response = await fetch(url, {
+  const response = await customFetch(url, {
     headers: {
       "User-Agent": userAgent,
       Authorization: `Basic ${credentials}`,
@@ -84,7 +100,7 @@ async function wordpressFetchWithPagination<T>(
   }`;
   const userAgent = "Next.js WordPress Client";
 
-  const response = await fetch(url, {
+  const response = await customFetch(url, {
     headers: {
       "User-Agent": userAgent,
       Authorization: `Basic ${credentials}`,
@@ -159,7 +175,7 @@ export async function getPostsPaginated(
   }`;
   const userAgent = "Next.js WordPress Client";
 
-  const response = await fetch(url, {
+  const response = await customFetch(url, {
     headers: {
       "User-Agent": userAgent,
       Authorization: `Basic ${credentials}`,
