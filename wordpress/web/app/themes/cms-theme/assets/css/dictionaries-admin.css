@@ -1,0 +1,316 @@
+/* Dictionaries Admin Page Styles - Table Layout */
+
+.dictionaries-container {
+  max-width: 1400px;
+  margin: 20px 0;
+}
+
+.dictionaries-table-wrapper {
+  background: #fff;
+  border: 1px solid #ccd0d4;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  overflow-x: auto;
+}
+
+.dictionaries-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.dictionaries-table th,
+.dictionaries-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e5e5;
+  vertical-align: top;
+}
+
+.dictionaries-table th {
+  background: #f9f9f9;
+  font-weight: 600;
+  color: #23282d;
+  border-bottom: 2px solid #0073aa;
+}
+
+.dictionaries-table th.key-column {
+  width: 200px;
+  min-width: 200px;
+}
+
+.dictionaries-table th.lang-column {
+  width: 180px;
+  min-width: 180px;
+}
+
+.dictionaries-table th.actions-column {
+  width: 100px;
+  min-width: 100px;
+}
+
+.dictionaries-table tbody tr:hover {
+  background: #f9f9f9;
+}
+
+.dictionaries-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.dictionaries-table tbody tr:nth-child(even):hover {
+  background: #f0f0f0;
+}
+
+/* Input styling */
+.translation-key,
+.translation-value {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.translation-key:focus,
+.translation-value:focus {
+  border-color: #0073aa;
+  box-shadow: 0 0 0 1px #0073aa;
+  outline: none;
+}
+
+.translation-key {
+  background: #f7f7f7;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.translation-value {
+  background: #fff;
+}
+
+.translation-key:focus {
+  background: #fff;
+}
+
+/* Button styling */
+.remove-row {
+  background: #dc3232 !important;
+  border-color: #dc3232 !important;
+  color: #fff !important;
+  padding: 6px 12px !important;
+  height: auto !important;
+  line-height: 1.4 !important;
+  font-size: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+.remove-row:hover {
+  background: #c92626 !important;
+  border-color: #c92626 !important;
+}
+
+.dictionaries-actions {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.add-row {
+  background: #0073aa !important;
+  border-color: #0073aa !important;
+  color: #fff !important;
+  padding: 10px 20px !important;
+  height: auto !important;
+  line-height: 1.4 !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.add-row:hover {
+  background: #005a87 !important;
+  border-color: #005a87 !important;
+}
+
+.save-all {
+  background: #28a745 !important;
+  border-color: #28a745 !important;
+  color: #fff !important;
+  padding: 10px 20px !important;
+  height: auto !important;
+  line-height: 1.4 !important;
+  font-size: 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.save-all:hover {
+  background: #218838 !important;
+  border-color: #218838 !important;
+}
+
+.save-all:disabled {
+  background: #6c757d !important;
+  border-color: #6c757d !important;
+  cursor: not-allowed;
+}
+
+/* Save status messages */
+#save-status {
+  margin-top: 15px;
+}
+
+.save-message {
+  padding: 10px 15px;
+  border-radius: 4px;
+  border-left: 4px solid;
+  margin: 10px 0;
+}
+
+.save-message.success {
+  background: #d4edda;
+  border-color: #28a745;
+  color: #155724;
+}
+
+.save-message.error {
+  background: #f8d7da;
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+.save-message.info {
+  background: #d1ecf1;
+  border-color: #17a2b8;
+  color: #0c5460;
+}
+
+/* Empty state */
+.dictionaries-table tbody:empty::after {
+  content: "No translations added yet. Click 'Add New Translation' to get started.";
+  display: block;
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-style: italic;
+  background: #f9f9f9;
+  border: 2px dashed #ddd;
+  border-radius: 4px;
+  margin: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .dictionaries-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .dictionaries-table {
+    min-width: 800px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dictionaries-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .add-row,
+  .save-all {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Loading states */
+.dictionary-row.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.dictionary-row.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #0073aa;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Validation styling */
+.translation-key.error,
+.translation-value.error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545;
+}
+
+.translation-key.error:focus,
+.translation-value.error:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 1px #dc3545;
+}
+
+/* Row animations */
+.dictionary-row {
+  transition: all 0.3s ease;
+}
+
+.dictionary-row.new-row {
+  background: #e8f5e8 !important;
+  animation: highlightNew 2s ease-out;
+}
+
+@keyframes highlightNew {
+  0% {
+    background: #e8f5e8;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+.dictionary-row.removing {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+/* Table header sticky */
+.dictionaries-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f9f9f9;
+}
+
+/* Language column highlighting */
+.lang-column[data-lang] {
+  position: relative;
+}
+
+.lang-column[data-lang]::after {
+  content: attr(data-lang);
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 10px;
+  color: #666;
+  background: #fff;
+  padding: 2px 4px;
+  border-radius: 2px;
+  border: 1px solid #ddd;
+}
