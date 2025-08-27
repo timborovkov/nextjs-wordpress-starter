@@ -143,20 +143,40 @@ function get_website_settings($data)
             $settings['menus'][$lang_code] = array();
 
             foreach ($registered_menus as $location => $description) {
-                $menu = wp_get_nav_menu_object(get_nav_menu_locations()[$location]);
-                if ($menu) {
-                    // Get the translated menu if it exists
-                    if (function_exists('pll_get_term')) {
-                        $translated_menu_id = pll_get_term($menu->term_id, $lang_code);
-                        if ($translated_menu_id) {
-                            $translated_menu = wp_get_nav_menu_object($translated_menu_id);
-                            if ($translated_menu) {
-                                $menu = $translated_menu;
+                $menu_locations = get_nav_menu_locations();
+                if (isset($menu_locations[$location])) {
+                    $menu = wp_get_nav_menu_object($menu_locations[$location]);
+                    if ($menu) {
+                        // Get the translated menu if it exists
+                        if (function_exists('pll_get_term')) {
+                            $translated_menu_id = pll_get_term($menu->term_id, $lang_code);
+                            if ($translated_menu_id) {
+                                $translated_menu = wp_get_nav_menu_object($translated_menu_id);
+                                if ($translated_menu) {
+                                    $menu = $translated_menu;
+                                }
                             }
                         }
-                    }
 
-                    $settings['menus'][$lang_code][$location] = array(
+                        $settings['menus'][$lang_code][$location] = array(
+                            'ID' => $menu->term_id,
+                            'name' => $menu->name,
+                            'slug' => $menu->slug,
+                            'description' => $menu->description,
+                            'count' => $menu->count
+                        );
+                    }
+                }
+            }
+        }
+    } else {
+        // Fallback for non-Polylang setup
+        foreach ($registered_menus as $location => $description) {
+            $menu_locations = get_nav_menu_locations();
+            if (isset($menu_locations[$location])) {
+                $menu = wp_get_nav_menu_object($menu_locations[$location]);
+                if ($menu) {
+                    $settings['menus'][get_locale()][$location] = array(
                         'ID' => $menu->term_id,
                         'name' => $menu->name,
                         'slug' => $menu->slug,
@@ -164,20 +184,6 @@ function get_website_settings($data)
                         'count' => $menu->count
                     );
                 }
-            }
-        }
-    } else {
-        // Fallback for non-Polylang setup
-        foreach ($registered_menus as $location => $description) {
-            $menu = wp_get_nav_menu_object(get_nav_menu_locations()[$location]);
-            if ($menu) {
-                $settings['menus'][get_locale()][$location] = array(
-                    'ID' => $menu->term_id,
-                    'name' => $menu->name,
-                    'slug' => $menu->slug,
-                    'description' => $menu->description,
-                    'count' => $menu->count
-                );
             }
         }
     }
