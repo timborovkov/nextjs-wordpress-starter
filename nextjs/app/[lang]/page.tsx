@@ -27,6 +27,11 @@ export default async function LanguageHomePage(props: PageProps) {
     // Get website settings to find the frontpage for this language
     const settings = await getWebsiteSettings();
 
+    // Validate that the language exists in our settings
+    if (!settings.languages.find((l) => l.code === lang)) {
+      notFound();
+    }
+
     // Get the frontpage for this language
     const frontpage = settings.frontpages[lang];
 
@@ -160,12 +165,15 @@ export async function generateStaticParams() {
   try {
     const settings = await getWebsiteSettings();
 
-    return Object.keys(settings.frontpages).map((lang) => ({
-      lang,
-    }));
+    // Only generate params for languages that actually exist
+    return Object.keys(settings.frontpages)
+      .filter((lang) => settings.languages.find((l) => l.code === lang))
+      .map((lang) => ({
+        lang,
+      }));
   } catch (error) {
     console.error("Error generating static params:", error);
-    // Fallback to common languages
-    return [{ lang: "en" }, { lang: "fr" }, { lang: "de" }, { lang: "es" }];
+    // Return empty array to allow dynamic generation
+    return [];
   }
 }
