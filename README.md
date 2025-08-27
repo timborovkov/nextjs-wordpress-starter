@@ -59,7 +59,13 @@ We've extended their excellent foundation with additional features and modern to
 - **Localized content fetching** from WordPress
 - **SEO-friendly language switching** with proper hreflang tags
 
-### 🎨 Tailwind CSS v4
+### 📦 Yoast SEO
+
+- **Yoast SEO integration** for SEO-friendly content
+- **SEO-friendly content fetching** from WordPress
+- **SEO-friendly language switching** with proper hreflang tags
+
+### 🎨 Tailwind CSS v4 and shadcn/ui
 
 - **Latest Tailwind CSS v4** with improved performance
 - **CSS-in-JS approach** for better developer experience
