@@ -1,19 +1,21 @@
-# WordPress Starter Template
+# WordPress Backend
 
-This repository contains a complete starter template for building headless CMS applications using WordPress (Bedrock) and Next.js. The WordPress backend serves as a headless CMS via the REST API, while the Next.js frontend displays the content to end users.
+This directory contains the WordPress backend built with Bedrock, serving as a headless CMS via the REST API.
 
 ## What's Included
 
-- **WordPress Backend**: Built with Bedrock for modern WordPress development
-- **Next.js Frontend**: Ready-to-use React frontend with Tailwind CSS
-- **Docker Setup**: Complete containerization for easy development and deployment
+- **WordPress with Bedrock**: Modern WordPress development using the [Bedrock](https://roots.io/bedrock/) boilerplate
+- **Composer-based**: Dependency management for WordPress core, plugins, and themes
+- **Starter Theme**: Barebones theme optimized for headless CMS usage
+- **Starter Plugins**: Required plugins for this project + personal nice-to-have plugins
+- **REST API**: Full WordPress REST API with custom endpoints
+- **Docker Support**: Complete containerization for development and deployment
 - **Sample Content**: Pre-configured database and media files to get started quickly
 
 ## Links
 
 - **Bedrock Documentation:** [https://roots.io/bedrock/docs/](https://roots.io/bedrock/docs/)
 - **WordPress Documentation:** [https://developer.wordpress.org/](https://developer.wordpress.org/)
-- **Next.js Documentation:** [https://nextjs.org/docs](https://nextjs.org/docs)
 
 ## Requirements
 
@@ -22,7 +24,7 @@ This repository contains a complete starter template for building headless CMS a
 - Composer
 - MySQL version 8.0 or greater
 - Nginx
-- Node.js 18+ (for Next.js frontend)
+- Docker and Docker Compose (for containerized setup)
 
 For further details on deployment environment requirements, see the [WordPress hosting handbook](https://make.wordpress.org/hosting/handbook/server-environment/).
 
@@ -39,14 +41,7 @@ Bedrock is a WordPress boilerplate designed for developers who wish to manage th
 
 ## Quick Start
 
-### 1. Clone the Repository
-
-```bash
-git clone <your-repo-url>
-cd wordpress-starter
-```
-
-### 2. Set Up WordPress Backend
+### 1. Set Up WordPress Backend
 
 ```bash
 cd wordpress
@@ -55,31 +50,20 @@ cp .env.example .env
 # Edit .env with your database credentials and site URL
 ```
 
-### 3. Set Up Next.js Frontend
+### 2. Start Development
+
+**Using Docker (Recommended):**
 
 ```bash
-cd ../nextjs
-npm install
-# or
-pnpm install
-```
-
-### 4. Start Development
-
-**WordPress (using Docker):**
-
-```bash
-cd ../wordpress
 docker-compose up -d
 ```
 
-**Next.js:**
+**Manual Setup:**
 
 ```bash
-cd ../nextjs
-npm run dev
-# or
-pnpm dev
+# Configure your local web server to point to web/ directory
+# Set up MySQL database
+# Update .env file with correct credentials
 ```
 
 ## Local Development
@@ -160,7 +144,7 @@ If you haven't already, clone the repository:
 
 ```bash
 git clone <your-repo-url>
-cd wordpress-starter/wordpress
+cd tims-wordpress-starter/wordpress
 ```
 
 Bedrock relies on a `.env` file for configuration. Create (or update) the `.env` file in the project root according to the provided `.env.example` file.
@@ -325,17 +309,6 @@ cms-theme/
 └── screenshot.png                  # Theme preview image
 ```
 
-## Next.js Frontend
-
-The Next.js frontend is located in the `../nextjs` directory and provides:
-
-- Modern React-based frontend
-- Tailwind CSS for styling
-- TypeScript support
-- API routes for server-side functionality
-- Optimized build process
-- SEO-friendly static generation
-
 ## Customization
 
 ### Adding Custom Post Types
@@ -358,9 +331,9 @@ register_post_type('custom_post_type', [
 
 Use Advanced Custom Fields (ACF) or create custom meta fields in `web/app/themes/cms-theme/inc/fields.php`.
 
-### Customizing the Frontend
+### Customizing the Theme
 
-Modify the Next.js components in `../nextjs/components/` and pages in `../nextjs/app/` to match your design requirements.
+Modify the theme files in `web/app/themes/cms-theme/` to match your specific requirements. The theme is designed to be minimal and focused on providing content via the REST API.
 
 ## Contributing
 
@@ -379,9 +352,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 For questions and support:
 
 - Check the documentation links above
-- Review the WordPress and Next.js documentation
+- Review the WordPress and Bedrock documentation
 - Open an issue in the repository
 
 ---
 
-This starter template provides everything you need to build a modern headless CMS application with WordPress and Next.js. Customize it to fit your specific project requirements and start building amazing content-driven applications!
+This starter template provides everything you need to build a modern headless CMS application with WordPress and Bedrock. Customize it to fit your specific project requirements and start building amazing content-driven applications!
