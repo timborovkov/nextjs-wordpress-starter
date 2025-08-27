@@ -30,6 +30,7 @@ add_action('rest_api_init', function () {
     register_rest_route('wp/v2', '/menus', array(
         'methods' => 'GET',
         'callback' => 'get_menu_items',
+        'permission_callback' => '__return_true',
         'args' => array(
             'slug' => array(
                 'required' => true,
