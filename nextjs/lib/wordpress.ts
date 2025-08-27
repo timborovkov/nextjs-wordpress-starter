@@ -10,6 +10,11 @@ import type {
   Page,
   Author,
   FeaturedMedia,
+  WebsiteSettings,
+  MenuItem,
+  PostWithACF,
+  PageWithACF,
+  FindPostResponse,
 } from "./wordpress.d";
 
 const baseUrl = process.env.WORDPRESS_URL;
@@ -130,7 +135,7 @@ export async function getPostsPaginated(
     category?: string;
     search?: string;
   }
-): Promise<WordPressResponse<Post[]>> {
+): Promise<WordPressResponse<PostWithACF[]>> {
   const query: Record<string, any> = {
     _embed: true,
     per_page: perPage,
@@ -200,7 +205,7 @@ export async function getAllPosts(filterParams?: {
   tag?: string;
   category?: string;
   search?: string;
-}): Promise<Post[]> {
+}): Promise<PostWithACF[]> {
   const query: Record<string, any> = {
     _embed: true,
     per_page: 100,
@@ -208,37 +213,26 @@ export async function getAllPosts(filterParams?: {
 
   if (filterParams?.search) {
     query.search = filterParams.search;
-
-    if (filterParams?.author) {
-      query.author = filterParams.author;
-    }
-    if (filterParams?.tag) {
-      query.tags = filterParams.tag;
-    }
-    if (filterParams?.category) {
-      query.categories = filterParams.category;
-    }
-  } else {
-    if (filterParams?.author) {
-      query.author = filterParams.author;
-    }
-    if (filterParams?.tag) {
-      query.tags = filterParams.tag;
-    }
-    if (filterParams?.category) {
-      query.categories = filterParams.category;
-    }
+  }
+  if (filterParams?.author) {
+    query.author = filterParams.author;
+  }
+  if (filterParams?.tag) {
+    query.tags = filterParams.tag;
+  }
+  if (filterParams?.category) {
+    query.categories = filterParams.category;
   }
 
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", query);
+  return wordpressFetch<PostWithACF[]>("/wp-json/wp/v2/posts", query);
 }
 
-export async function getPostById(id: number): Promise<Post> {
-  return wordpressFetch<Post>(`/wp-json/wp/v2/posts/${id}`);
+export async function getPostById(id: number): Promise<PostWithACF> {
+  return wordpressFetch<PostWithACF>(`/wp-json/wp/v2/posts/${id}`);
 }
 
-export async function getPostBySlug(slug: string): Promise<Post> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { slug }).then(
+export async function getPostBySlug(slug: string): Promise<PostWithACF> {
+  return wordpressFetch<PostWithACF[]>("/wp-json/wp/v2/posts", { slug }).then(
     (posts) => posts[0]
   );
 }
@@ -257,14 +251,16 @@ export async function getCategoryBySlug(slug: string): Promise<Category> {
   );
 }
 
-export async function getPostsByCategory(categoryId: number): Promise<Post[]> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+export async function getPostsByCategory(
+  categoryId: number
+): Promise<PostWithACF[]> {
+  return wordpressFetch<PostWithACF[]>("/wp-json/wp/v2/posts", {
     categories: categoryId,
   });
 }
 
-export async function getPostsByTag(tagId: number): Promise<Post[]> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { tags: tagId });
+export async function getPostsByTag(tagId: number): Promise<PostWithACF[]> {
+  return wordpressFetch<PostWithACF[]>("/wp-json/wp/v2/posts", { tags: tagId });
 }
 
 export async function getTagsByPost(postId: number): Promise<Tag[]> {
@@ -285,16 +281,16 @@ export async function getTagBySlug(slug: string): Promise<Tag> {
   );
 }
 
-export async function getAllPages(): Promise<Page[]> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages");
+export async function getAllPages(): Promise<PageWithACF[]> {
+  return wordpressFetch<PageWithACF[]>("/wp-json/wp/v2/pages");
 }
 
-export async function getPageById(id: number): Promise<Page> {
-  return wordpressFetch<Page>(`/wp-json/wp/v2/pages/${id}`);
+export async function getPageById(id: number): Promise<PageWithACF> {
+  return wordpressFetch<PageWithACF>(`/wp-json/wp/v2/pages/${id}`);
 }
 
-export async function getPageBySlug(slug: string): Promise<Page> {
-  return wordpressFetch<Page[]>("/wp-json/wp/v2/pages", { slug }).then(
+export async function getPageBySlug(slug: string): Promise<PageWithACF> {
+  return wordpressFetch<PageWithACF[]>("/wp-json/wp/v2/pages", { slug }).then(
     (pages) => pages[0]
   );
 }
@@ -313,33 +309,66 @@ export async function getAuthorBySlug(slug: string): Promise<Author> {
   );
 }
 
-export async function getPostsByAuthor(authorId: number): Promise<Post[]> {
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { author: authorId });
+export async function getPostsByAuthor(
+  authorId: number
+): Promise<PostWithACF[]> {
+  return wordpressFetch<PostWithACF[]>("/wp-json/wp/v2/posts", {
+    author: authorId,
+  });
 }
 
 export async function getPostsByAuthorSlug(
   authorSlug: string
-): Promise<Post[]> {
+): Promise<PostWithACF[]> {
   const author = await getAuthorBySlug(authorSlug);
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { author: author.id });
+  return wordpressFetch<PostWithACF[]>("/wp-json/wp/v2/posts", {
+    author: author.id,
+  });
 }
 
 export async function getPostsByCategorySlug(
   categorySlug: string
-): Promise<Post[]> {
+): Promise<PostWithACF[]> {
   const category = await getCategoryBySlug(categorySlug);
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", {
+  return wordpressFetch<PostWithACF[]>("/wp-json/wp/v2/posts", {
     categories: category.id,
   });
 }
 
-export async function getPostsByTagSlug(tagSlug: string): Promise<Post[]> {
+export async function getPostsByTagSlug(
+  tagSlug: string
+): Promise<PostWithACF[]> {
   const tag = await getTagBySlug(tagSlug);
-  return wordpressFetch<Post[]>("/wp-json/wp/v2/posts", { tags: tag.id });
+  return wordpressFetch<PostWithACF[]>("/wp-json/wp/v2/posts", {
+    tags: tag.id,
+  });
 }
 
 export async function getFeaturedMediaById(id: number): Promise<FeaturedMedia> {
   return wordpressFetch<FeaturedMedia>(`/wp-json/wp/v2/media/${id}`);
+}
+
+// Custom API Endpoint Functions
+
+/**
+ * Get comprehensive website settings including languages, menus, and site configuration
+ */
+export async function getWebsiteSettings(): Promise<WebsiteSettings> {
+  return wordpressFetch<WebsiteSettings>("/wp-json/wp/v2/website-settings");
+}
+
+/**
+ * Get menu items by menu slug
+ */
+export async function getMenuItems(menuSlug: string): Promise<MenuItem[]> {
+  return wordpressFetch<MenuItem[]>("/wp-json/wp/v2/menus", { slug: menuSlug });
+}
+
+/**
+ * Find a post by its full path (e.g., "en/developers/faq")
+ */
+export async function findPostByPath(path: string): Promise<FindPostResponse> {
+  return wordpressFetch<FindPostResponse>("/wp-json/wp/v2/find-post", { path });
 }
 
 export async function searchCategories(query: string): Promise<Category[]> {
@@ -394,7 +423,7 @@ export async function getPostsByCategoryPaginated(
   categoryId: number,
   page: number = 1,
   perPage: number = 9
-): Promise<WordPressResponse<Post[]>> {
+): Promise<WordPressResponse<PostWithACF[]>> {
   const query = {
     _embed: true,
     per_page: perPage,
@@ -402,14 +431,17 @@ export async function getPostsByCategoryPaginated(
     categories: categoryId,
   };
 
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+  return wordpressFetchWithPagination<PostWithACF[]>(
+    "/wp-json/wp/v2/posts",
+    query
+  );
 }
 
 export async function getPostsByTagPaginated(
   tagId: number,
   page: number = 1,
   perPage: number = 9
-): Promise<WordPressResponse<Post[]>> {
+): Promise<WordPressResponse<PostWithACF[]>> {
   const query = {
     _embed: true,
     per_page: perPage,
@@ -417,14 +449,17 @@ export async function getPostsByTagPaginated(
     tags: tagId,
   };
 
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+  return wordpressFetchWithPagination<PostWithACF[]>(
+    "/wp-json/wp/v2/posts",
+    query
+  );
 }
 
 export async function getPostsByAuthorPaginated(
   authorId: number,
   page: number = 1,
   perPage: number = 9
-): Promise<WordPressResponse<Post[]>> {
+): Promise<WordPressResponse<PostWithACF[]>> {
   const query = {
     _embed: true,
     per_page: perPage,
@@ -432,7 +467,10 @@ export async function getPostsByAuthorPaginated(
     author: authorId,
   };
 
-  return wordpressFetchWithPagination<Post[]>("/wp-json/wp/v2/posts", query);
+  return wordpressFetchWithPagination<PostWithACF[]>(
+    "/wp-json/wp/v2/posts",
+    query
+  );
 }
 
 export { WordPressAPIError };
