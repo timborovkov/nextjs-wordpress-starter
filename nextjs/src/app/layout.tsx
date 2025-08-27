@@ -23,7 +23,7 @@ import { getAllDictionaryTranslations } from "@/lib/wordpress";
 import type {
   DictionaryLanguage,
   DictionaryTranslation,
-} from "@/lib/wordpress";
+} from "@/types/wordpress";
 
 const font = FontSans({
   subsets: ["latin"],

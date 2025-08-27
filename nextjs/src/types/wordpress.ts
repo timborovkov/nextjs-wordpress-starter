@@ -93,7 +93,7 @@ export interface Page extends WPEntity {
 }
 
 // Taxonomy types
-interface Taxonomy {
+export interface Taxonomy {
   id: number;
   count: number;
   description: string;

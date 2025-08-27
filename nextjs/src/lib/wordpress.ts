@@ -16,7 +16,7 @@ import type {
   FindPostResponse,
   DictionaryResponse,
   DictionaryAllLanguagesResponse,
-} from "./wordpress.d";
+} from "../types/wordpress";
 
 const baseUrl = process.env.WORDPRESS_URL;
 

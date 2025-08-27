@@ -14,7 +14,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import type {
   DictionaryLanguage,
   DictionaryTranslation,
-} from "../lib/wordpress.d";
+} from "../types/wordpress";
 
 import { setCookie } from "../utils/cookie";
 
