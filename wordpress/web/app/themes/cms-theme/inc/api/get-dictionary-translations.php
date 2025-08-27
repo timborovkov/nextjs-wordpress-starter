@@ -100,54 +100,6 @@ function get_all_dictionary_translations($request)
     return $response;
 }
 
-/**
- * Get dictionary translations by group/category
- * Example: GET /wp/v2/dictionary-translations/group?group=navigation
- */
-function get_dictionary_translations_by_group($request)
-{
-    $group = $request->get_param('group');
-    $lang = $request->get_param('lang');
-
-    if (empty($group)) {
-        return new WP_Error('missing_group', 'Group parameter is required', array('status' => 400));
-    }
-
-    // If no language specified, try to detect from current context
-    if (empty($lang)) {
-        if (function_exists('pll_current_language')) {
-            $lang = pll_current_language();
-        } else {
-            $lang = get_locale();
-        }
-    }
-
-    // Get dictionaries from options
-    $dictionaries = get_option('cms_theme_dictionaries', array());
-
-    // Filter translations by group (assuming keys follow a pattern like "group_keyname")
-    $group_translations = array();
-    if (isset($dictionaries[$lang]) && is_array($dictionaries[$lang])) {
-        foreach ($dictionaries[$lang] as $entry) {
-            if (!empty($entry['key']) && !empty($entry['value'])) {
-                // Check if key starts with the group prefix
-                if (strpos($entry['key'], $group . '_') === 0) {
-                    $key_name = str_replace($group . '_', '', $entry['key']);
-                    $group_translations[$key_name] = $entry['value'];
-                }
-            }
-        }
-    }
-
-    return array(
-        'group' => $group,
-        'language' => $lang,
-        'translations' => $group_translations,
-        'count' => count($group_translations),
-        'timestamp' => current_time('timestamp')
-    );
-}
-
 add_action('rest_api_init', function () {
     // Main endpoint for single language
     register_rest_route('wp/v2', '/dictionary-translations', array(
@@ -170,28 +122,5 @@ add_action('rest_api_init', function () {
         'methods' => 'GET',
         'callback' => 'get_all_dictionary_translations',
         'permission_callback' => '__return_true',
-    ));
-
-    // Endpoint for group-based translations
-    register_rest_route('wp/v2', '/dictionary-translations/group', array(
-        'methods' => 'GET',
-        'callback' => 'get_dictionary_translations_by_group',
-        'permission_callback' => '__return_true',
-        'args' => array(
-            'group' => array(
-                'required' => true,
-                'validate_callback' => function ($param, $request, $key) {
-                    return is_string($param) && !empty(trim($param));
-                },
-                'sanitize_callback' => 'sanitize_text_field'
-            ),
-            'lang' => array(
-                'required' => false,
-                'validate_callback' => function ($param, $request, $key) {
-                    return is_string($param) && !empty(trim($param));
-                },
-                'sanitize_callback' => 'sanitize_text_field'
-            ),
-        ),
     ));
 });
