@@ -1,5 +1,5 @@
-import { revalidatePath, revalidateTag } from "next/cache";
-import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { NextRequest, NextResponse } from 'next/server';
 
 export const maxDuration = 30;
 
@@ -12,12 +12,12 @@ export const maxDuration = 30;
 export async function POST(request: NextRequest) {
   try {
     const requestBody = await request.json();
-    const secret = request.headers.get("x-webhook-secret");
+    const secret = request.headers.get('x-webhook-secret');
 
     if (secret !== process.env.WORDPRESS_WEBHOOK_SECRET) {
-      console.error("Invalid webhook secret");
+      console.error('Invalid webhook secret');
       return NextResponse.json(
-        { message: "Invalid webhook secret" },
+        { message: 'Invalid webhook secret' },
         { status: 401 }
       );
     }
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     if (!contentType) {
       return NextResponse.json(
-        { message: "Missing content type" },
+        { message: 'Missing content type' },
         { status: 400 }
       );
     }
@@ -34,34 +34,34 @@ export async function POST(request: NextRequest) {
     try {
       console.log(
         `Revalidating content: ${contentType}${
-          contentId ? ` (ID: ${contentId})` : ""
+          contentId ? ` (ID: ${contentId})` : ''
         }`
       );
 
       // Revalidate specific content type tags
-      revalidateTag("wordpress");
+      revalidateTag('wordpress');
 
-      if (contentType === "post") {
-        revalidateTag("posts");
+      if (contentType === 'post') {
+        revalidateTag('posts');
         if (contentId) {
           revalidateTag(`post-${contentId}`);
         }
         // Clear all post pages when any post changes
-        revalidateTag("posts-page-1");
-      } else if (contentType === "category") {
-        revalidateTag("categories");
+        revalidateTag('posts-page-1');
+      } else if (contentType === 'category') {
+        revalidateTag('categories');
         if (contentId) {
           revalidateTag(`posts-category-${contentId}`);
           revalidateTag(`category-${contentId}`);
         }
-      } else if (contentType === "tag") {
-        revalidateTag("tags");
+      } else if (contentType === 'tag') {
+        revalidateTag('tags');
         if (contentId) {
           revalidateTag(`posts-tag-${contentId}`);
           revalidateTag(`tag-${contentId}`);
         }
-      } else if (contentType === "author" || contentType === "user") {
-        revalidateTag("authors");
+      } else if (contentType === 'author' || contentType === 'user') {
+        revalidateTag('authors');
         if (contentId) {
           revalidateTag(`posts-author-${contentId}`);
           revalidateTag(`author-${contentId}`);
@@ -69,21 +69,21 @@ export async function POST(request: NextRequest) {
       }
 
       // Also revalidate the entire layout for safety
-      revalidatePath("/", "layout");
+      revalidatePath('/', 'layout');
 
       return NextResponse.json({
         revalidated: true,
         message: `Revalidated ${contentType}${
-          contentId ? ` (ID: ${contentId})` : ""
+          contentId ? ` (ID: ${contentId})` : ''
         } and related content`,
         timestamp: new Date().toISOString(),
       });
     } catch (error) {
-      console.error("Error revalidating path:", error);
+      console.error('Error revalidating path:', error);
       return NextResponse.json(
         {
           revalidated: false,
-          message: "Failed to revalidate site",
+          message: 'Failed to revalidate site',
           error: (error as Error).message,
           timestamp: new Date().toISOString(),
         },
@@ -91,10 +91,10 @@ export async function POST(request: NextRequest) {
       );
     }
   } catch (error) {
-    console.error("Revalidation error:", error);
+    console.error('Revalidation error:', error);
     return NextResponse.json(
       {
-        message: "Error revalidating content",
+        message: 'Error revalidating content',
         error: (error as Error).message,
         timestamp: new Date().toISOString(),
       },
