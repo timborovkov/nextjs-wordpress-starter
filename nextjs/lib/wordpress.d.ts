@@ -230,3 +230,122 @@ export interface FilterBarProps {
   onTagChange?: (tagId: Tag["id"] | undefined) => void;
   onCategoryChange?: (categoryId: Category["id"] | undefined) => void;
 }
+
+// Custom API Endpoint Types
+
+// Website Settings Types
+export interface Language {
+  code: string;
+  name: string;
+  flag: string;
+  is_default: boolean;
+  is_current: boolean;
+  url: string;
+}
+
+export interface Frontpage {
+  ID: number;
+  title: string;
+  slug: string;
+  url: string;
+  path: string;
+}
+
+export interface PostsPage {
+  ID: number;
+  title: string;
+  slug: string;
+  url: string;
+}
+
+export interface Menu {
+  ID: number;
+  name: string;
+  slug: string;
+  description: string;
+  count: number;
+}
+
+export interface SiteSettings {
+  name: string;
+  description: string;
+  url: string;
+  admin_url: string;
+  rest_url: string;
+  timezone: string;
+  date_format: string;
+  time_format: string;
+  posts_per_page: number;
+  default_category: number;
+  default_post_format: string;
+  show_on_front: string;
+  page_on_front: number;
+  page_for_posts: number;
+}
+
+export interface PostType {
+  name: string;
+  label: string;
+  labels: Record<string, string>;
+  public: boolean;
+  has_archive: boolean;
+  supports: Record<string, boolean>;
+}
+
+export interface Taxonomy {
+  name: string;
+  label: string;
+  labels: Record<string, string>;
+  public: boolean;
+  hierarchical: boolean;
+  show_ui: boolean;
+  show_in_rest: boolean;
+}
+
+export interface ThemeInfo {
+  name: string;
+  version: string;
+  description: string;
+  author: string;
+  text_domain: string;
+}
+
+export interface WebsiteSettings {
+  languages: Language[];
+  frontpages: Record<string, Frontpage>;
+  posts_pages: Record<string, PostsPage>;
+  menus: Record<string, Record<string, Menu>>;
+  site: SiteSettings;
+  post_types: PostType[];
+  taxonomies: Taxonomy[];
+  theme: ThemeInfo;
+}
+
+// Menu Items Types
+export interface MenuItem {
+  ID: number;
+  title: string;
+  url: string;
+  menu_order: number;
+  menu_item_parent: number;
+}
+
+// ACF Fields Type
+export interface ACFFields {
+  [key: string]: any;
+}
+
+// Extended Post and Page types with ACF fields
+export interface PostWithACF extends Post {
+  acf?: ACFFields;
+}
+
+export interface PageWithACF extends Page {
+  acf?: ACFFields;
+}
+
+// Find Post by Path Response
+export interface FindPostResponse extends Post {
+  // This will include all standard post fields plus any additional fields
+  // The actual structure depends on the post type and ACF fields
+}
