@@ -20,6 +20,12 @@ const credentials = Buffer.from(`${username}:${applicationPassword}`).toString(
   "base64"
 );
 
+// SSL configuration for local development
+if (process.env.NODE_ENV === "development") {
+  // Set Node.js to ignore SSL certificate errors for local development
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+}
+
 if (!baseUrl) {
   throw new Error("WORDPRESS_URL environment variable is not defined");
 }
