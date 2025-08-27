@@ -5,22 +5,21 @@
  ============================================================================
 */
 @layer base {
-    /* --- Global Styles & Typography --- */
-    body {
-      @apply bg-background text-foreground font-main tracking-normal antialiased;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    /* --- Typography --- */
-    h1 {
-      @apply text-4xl font-bold;
-    }
-    h2 {
-      @apply text-3xl font-bold;
-    }
-    h3 {
-      @apply text-2xl font-bold;
-    }
+  /* --- Global Styles & Typography --- */
+  body {
+    @apply bg-background text-foreground tracking-normal antialiased;
+    font-size: 14px;
+    line-height: 1.6;
   }
-  
+
+  /* --- Typography --- */
+  h1 {
+    @apply text-4xl font-bold;
+  }
+  h2 {
+    @apply text-3xl font-bold;
+  }
+  h3 {
+    @apply text-2xl font-bold;
+  }
+}

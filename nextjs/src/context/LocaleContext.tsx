@@ -1,22 +1,21 @@
-"use client";
+'use client';
 
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 import {
   createContext,
   useCallback,
   useContext,
   useMemo,
   useState,
-} from "react";
+} from 'react';
 
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from 'next/navigation';
 
 import type {
   DictionaryLanguage,
   DictionaryTranslation,
-} from "../types/wordpress";
-
-import { setCookie } from "../utils/cookie";
+} from '../types/wordpress';
+import { setCookie } from '../utils/cookie';
 
 // Type for available locales
 export type Locale = string;
@@ -47,7 +46,7 @@ const LocaleContext = createContext<{
   dict: {} as Dictionary,
   availableLocales: [],
   switchLocale: () => {},
-  translate: () => "",
+  translate: () => '',
 });
 
 /**
@@ -70,7 +69,7 @@ export function LocaleProvider({
 
   // Determine current locale from URL params
   const currentLocale = useMemo<Locale | undefined>(
-    () => (typeof lang === "string" ? lang : undefined),
+    () => (typeof lang === 'string' ? lang : undefined),
     [lang]
   );
 
@@ -117,12 +116,12 @@ export function LocaleProvider({
     (newLocale: Locale) => {
       if (!newLocale) return;
 
-      setCookie("locale", newLocale, 365);
+      setCookie('locale', newLocale, 365);
       setLocale(newLocale);
 
       // Remove the current locale from the pathname before adding the new locale
       // pathname format: /[locale]/rest/of/path
-      const pathWithoutLocale = pathname.replace(`/${locale}`, "") || "/";
+      const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/';
 
       router.push(`/${newLocale}${pathWithoutLocale}`);
     },
@@ -145,7 +144,7 @@ export function LocaleProvider({
 export const useLocale = () => {
   const context = useContext(LocaleContext);
   if (!context) {
-    throw new Error("useLocale must be used within a LocaleProvider");
+    throw new Error('useLocale must be used within a LocaleProvider');
   }
   return context;
 };

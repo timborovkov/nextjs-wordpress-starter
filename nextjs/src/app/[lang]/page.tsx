@@ -1,7 +1,10 @@
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getWebsiteSettings, findPostByPath } from "@/lib/wordpress";
-import { Section, Container, Prose } from "@/components/craft";
+import { Metadata } from 'next';
+
+import { notFound } from 'next/navigation';
+
+import { findPostByPath, getWebsiteSettings } from '@/lib/wordpress';
+
+import { Container, Prose, Section } from '@/components/craft';
 
 // Revalidate every hour
 export const revalidate = 3600;
@@ -43,7 +46,7 @@ export default async function LanguageHomePage(props: PageProps) {
     if (frontpage.ID > 0) {
       const post = await findPostByPath(`${lang}/${frontpage.slug}`);
 
-      if (!post || "code" in post) {
+      if (!post || 'code' in post) {
         notFound();
       }
 
@@ -74,7 +77,7 @@ export default async function LanguageHomePage(props: PageProps) {
       );
     }
   } catch (error) {
-    console.error("Error loading language home page:", error);
+    console.error('Error loading language home page:', error);
     notFound();
   }
 }
@@ -101,33 +104,33 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       try {
         const post = await findPostByPath(`${lang}/${frontpage.slug}`);
 
-        if (post && !("code" in post)) {
+        if (post && !('code' in post)) {
           return {
             title: post.title.rendered,
             description: post.excerpt?.rendered
-              ? post.excerpt.rendered.replace(/<[^>]*>/g, "").trim()
+              ? post.excerpt.rendered.replace(/<[^>]*>/g, '').trim()
               : post.content.rendered
-                  .replace(/<[^>]*>/g, "")
+                  .replace(/<[^>]*>/g, '')
                   .trim()
-                  .slice(0, 200) + "...",
+                  .slice(0, 200) + '...',
             openGraph: {
-              type: "website",
+              type: 'website',
               locale: lang,
               url: `${
-                process.env.NEXT_PUBLIC_BASE_URL || "https://example.com"
+                process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
               }/${lang}`,
               title: post.title.rendered,
               description: post.excerpt?.rendered
-                ? post.excerpt.rendered.replace(/<[^>]*>/g, "").trim()
+                ? post.excerpt.rendered.replace(/<[^>]*>/g, '').trim()
                 : post.content.rendered
-                    .replace(/<[^>]*>/g, "")
+                    .replace(/<[^>]*>/g, '')
                     .trim()
-                    .slice(0, 200) + "...",
+                    .slice(0, 200) + '...',
             },
           };
         }
       } catch (error) {
-        console.error("Error fetching post for metadata:", error);
+        console.error('Error fetching post for metadata:', error);
       }
     }
 
@@ -136,17 +139,17 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
       title: `${frontpage.title} | ${settings.site.name}`,
       description: settings.site.description,
       openGraph: {
-        type: "website",
+        type: 'website',
         locale: lang,
         url: `${
-          process.env.NEXT_PUBLIC_BASE_URL || "https://example.com"
+          process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
         }/${lang}`,
         title: frontpage.title,
         description: settings.site.description,
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
+    console.error('Error generating metadata:', error);
     return {
       title: `Home | ${lang.toUpperCase()}`,
     };
@@ -172,7 +175,7 @@ export async function generateStaticParams() {
         lang,
       }));
   } catch (error) {
-    console.error("Error generating static params:", error);
+    console.error('Error generating static params:', error);
     // Return empty array to allow dynamic generation
     return [];
   }

@@ -1,14 +1,17 @@
-import { getAllCategories } from "@/src/lib/wordpress";
-import { Section, Container, Prose } from "@/components/craft";
-import { Metadata } from "next";
-import BackButton from "@/components/back";
-import Link from "next/link";
+import { Metadata } from 'next';
+
+import Link from 'next/link';
+
+import { getAllCategories } from '@/lib/wordpress';
+
+import BackButton from '@/components/back';
+import { Container, Prose, Section } from '@/components/craft';
 
 export const metadata: Metadata = {
-  title: "All Categories",
-  description: "Browse all categories of our blog posts",
+  title: 'All Categories',
+  description: 'Browse all categories of our blog posts',
   alternates: {
-    canonical: "/posts/categories",
+    canonical: '/posts/categories',
   },
 };
 
@@ -17,10 +20,10 @@ export default async function Page() {
 
   return (
     <Section>
-      <Container className="space-y-6">
-        <Prose className="mb-8">
+      <Container className='space-y-6'>
+        <Prose className='mb-8'>
           <h2>All Categories</h2>
-          <ul className="grid">
+          <ul className='grid'>
             {categories.map((category: any) => (
               <li key={category.id}>
                 <Link href={`/posts/?category=${category.id}`}>

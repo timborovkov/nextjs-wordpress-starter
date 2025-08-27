@@ -1,13 +1,19 @@
-import {
-  getPostsPaginated,
-  getAllAuthors,
-  getAllTags,
-  getAllCategories,
-  searchAuthors,
-  searchTags,
-  searchCategories,
-} from "@/src/lib/wordpress";
+import type { Metadata } from 'next';
 
+import {
+  getAllAuthors,
+  getAllCategories,
+  getAllTags,
+  getPostsPaginated,
+  searchAuthors,
+  searchCategories,
+  searchTags,
+} from '@/lib/wordpress';
+
+import { Container, Prose, Section } from '@/components/craft';
+import { FilterPosts } from '@/components/posts/filter';
+import { PostCard } from '@/components/posts/post-card';
+import { SearchInput } from '@/components/posts/search-input';
 import {
   Pagination,
   PaginationContent,
@@ -15,21 +21,14 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
-
-import { Section, Container, Prose } from "@/components/craft";
-import { PostCard } from "@/components/posts/post-card";
-import { FilterPosts } from "@/components/posts/filter";
-import { SearchInput } from "@/components/posts/search-input";
-
-import type { Metadata } from "next";
+} from '@/components/ui/pagination';
 
 export const metadata: Metadata = {
-  title: "Blog Posts",
-  description: "Browse all our blog posts",
+  title: 'Blog Posts',
+  description: 'Browse all our blog posts',
 };
 
-export const dynamic = "auto";
+export const dynamic = 'auto';
 export const revalidate = 600;
 
 export default async function Page({
@@ -64,27 +63,27 @@ export default async function Page({
   // Create pagination URL helper
   const createPaginationUrl = (newPage: number) => {
     const params = new URLSearchParams();
-    if (newPage > 1) params.set("page", newPage.toString());
-    if (category) params.set("category", category);
-    if (author) params.set("author", author);
-    if (tag) params.set("tag", tag);
-    if (search) params.set("search", search);
-    return `/posts${params.toString() ? `?${params.toString()}` : ""}`;
+    if (newPage > 1) params.set('page', newPage.toString());
+    if (category) params.set('category', category);
+    if (author) params.set('author', author);
+    if (tag) params.set('tag', tag);
+    if (search) params.set('search', search);
+    return `/posts${params.toString() ? `?${params.toString()}` : ''}`;
   };
 
   return (
     <Section>
       <Container>
-        <div className="space-y-8">
+        <div className='space-y-8'>
           <Prose>
             <h2>All Posts</h2>
-            <p className="text-muted-foreground">
-              {total} {total === 1 ? "post" : "posts"} found
-              {search && " matching your search"}
+            <p className='text-muted-foreground'>
+              {total} {total === 1 ? 'post' : 'posts'} found
+              {search && ' matching your search'}
             </p>
           </Prose>
 
-          <div className="space-y-4">
+          <div className='space-y-4'>
             <SearchInput defaultValue={search} />
 
             <FilterPosts
@@ -98,19 +97,29 @@ export default async function Page({
           </div>
 
           {posts.length > 0 ? (
-            <div className="grid md:grid-cols-3 gap-4">
+            <div
+              className={`
+                grid gap-4
+                md:grid-cols-3
+              `}
+            >
               {posts.map((post) => (
                 <PostCard key={post.id} post={post} />
               ))}
             </div>
           ) : (
-            <div className="h-24 w-full border rounded-lg bg-accent/25 flex items-center justify-center">
+            <div
+              className={`
+                flex h-24 w-full items-center justify-center rounded-lg border
+                bg-accent/25
+              `}
+            >
               <p>No posts found</p>
             </div>
           )}
 
           {totalPages > 1 && (
-            <div className="flex justify-center items-center py-8">
+            <div className='flex items-center justify-center py-8'>
               <Pagination>
                 <PaginationContent>
                   {page > 1 && (
@@ -134,8 +143,8 @@ export default async function Page({
                       const showEllipsis =
                         index > 0 && pageNum - array[index - 1] > 1;
                       return (
-                        <div key={pageNum} className="flex items-center">
-                          {showEllipsis && <span className="px-2">...</span>}
+                        <div key={pageNum} className='flex items-center'>
+                          {showEllipsis && <span className='px-2'>...</span>}
                           <PaginationItem>
                             <PaginationLink
                               href={createPaginationUrl(pageNum)}

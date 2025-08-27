@@ -1,6 +1,7 @@
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { getAllDictionaryTranslations } from "./src/lib/wordpress";
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+
+import { getAllDictionaryTranslations } from '@/lib/wordpress';
 
 // Type for available locales
 type Locale = string;
@@ -12,20 +13,18 @@ type Locale = string;
 async function getAvailableLocales() {
   try {
     const response = await getAllDictionaryTranslations();
-    const locales = Object.values(response.languages).map(
-      (lang: any) => lang.code
-    );
+    const locales = Object.values(response.languages).map((lang) => lang.code);
 
     // Use the first locale as default (or fallback to "en")
-    const defaultLocale = locales[0] || "en";
+    const defaultLocale = locales[0] || 'en';
 
     return { locales, defaultLocale };
   } catch (error) {
     console.warn(
-      "Failed to fetch locales from WordPress, using fallback:",
+      'Failed to fetch locales from WordPress, using fallback:',
       error
     );
-    return { locales: ["en"], defaultLocale: "en" };
+    return { locales: ['en'], defaultLocale: 'en' };
   }
 }
 
@@ -36,7 +35,7 @@ async function getAvailableLocales() {
  */
 function detectLocaleFromURL(url: string): Locale | null {
   const pathname = new URL(url).pathname;
-  const segments = pathname.split("/").filter(Boolean);
+  const segments = pathname.split('/').filter(Boolean);
 
   // If first segment looks like a locale (2-3 character code), return it
   if (segments.length > 0 && /^[a-z]{2,3}$/.test(segments[0])) {
@@ -52,7 +51,7 @@ function detectLocaleFromURL(url: string): Locale | null {
  * @returns The locale from the cookies or null if not found
  */
 function getLocaleFromCookies(request: NextRequest): Locale | null {
-  const cookieLocale = request.cookies.get("locale")?.value;
+  const cookieLocale = request.cookies.get('locale')?.value;
   if (cookieLocale && /^[a-z]{2,3}$/.test(cookieLocale)) {
     return cookieLocale;
   }
@@ -65,8 +64,8 @@ function getLocaleFromCookies(request: NextRequest): Locale | null {
  * @param locale - The locale to set in the cookie
  */
 function setLocaleCookie(response: NextResponse, locale: Locale) {
-  response.cookies.set("locale", locale, {
-    path: "/",
+  response.cookies.set('locale', locale, {
+    path: '/',
     maxAge: 60 * 60 * 24 * 365,
   });
 }
@@ -87,7 +86,7 @@ export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // If accessing /api routes, skip the rest of the middleware
-  if (pathname.startsWith("/api")) return NextResponse.next();
+  if (pathname.startsWith('/api')) return NextResponse.next();
 
   // Get available locales from WordPress
   const { locales, defaultLocale } = await getAvailableLocales();
@@ -144,6 +143,6 @@ export default async function middleware(req: NextRequest) {
  */
 export const config = {
   matcher: [
-    "/((?!ui-assets|_next/static|_next/image|monitoring|favicon.ico|[^/]+\\.svg|[^/]+\\.png|[^/]+\\.ico|[^/]+\\.jpg|[^/]+\\.webp|[^/]+\\.jpeg|sitemap\\.xml|robots\\.txt).*)",
+    '/((?!ui-assets|_next/static|_next/image|monitoring|favicon.ico|[^/]+\\.svg|[^/]+\\.png|[^/]+\\.ico|[^/]+\\.jpg|[^/]+\\.webp|[^/]+\\.jpeg|sitemap\\.xml|robots\\.txt).*)',
   ],
 };

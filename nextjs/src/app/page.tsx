@@ -1,4 +1,4 @@
-import { Section, Container, Prose } from "@/components/craft";
+import { Container, Prose, Section } from '@/components/craft';
 
 // Revalidate every hour
 export const revalidate = 3600;

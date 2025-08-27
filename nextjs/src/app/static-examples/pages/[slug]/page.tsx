@@ -1,8 +1,10 @@
-import { getPageBySlug, getAllPages } from "@/src/lib/wordpress";
-import { Section, Container, Prose } from "@/components/craft";
-import { siteConfig } from "@/site.config";
+import type { Metadata } from 'next';
 
-import type { Metadata } from "next";
+import { siteConfig } from '@/site.config';
+
+import { getAllPages, getPageBySlug } from '@/lib/wordpress';
+
+import { Container, Prose, Section } from '@/components/craft';
 
 // Revalidate pages every hour
 export const revalidate = 3600;
@@ -28,15 +30,15 @@ export async function generateMetadata({
   }
 
   const ogUrl = new URL(`${siteConfig.site_domain}/api/og`);
-  ogUrl.searchParams.append("title", page.title.rendered);
+  ogUrl.searchParams.append('title', page.title.rendered);
   // Strip HTML tags for description and limit length
   const description = page.excerpt?.rendered
-    ? page.excerpt.rendered.replace(/<[^>]*>/g, "").trim()
+    ? page.excerpt.rendered.replace(/<[^>]*>/g, '').trim()
     : page.content.rendered
-        .replace(/<[^>]*>/g, "")
+        .replace(/<[^>]*>/g, '')
         .trim()
-        .slice(0, 200) + "...";
-  ogUrl.searchParams.append("description", description);
+        .slice(0, 200) + '...';
+  ogUrl.searchParams.append('description', description);
 
   return {
     title: page.title.rendered,
@@ -44,7 +46,7 @@ export async function generateMetadata({
     openGraph: {
       title: page.title.rendered,
       description: description,
-      type: "article",
+      type: 'article',
       url: `${siteConfig.site_domain}/pages/${page.slug}`,
       images: [
         {
@@ -56,7 +58,7 @@ export async function generateMetadata({
       ],
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       title: page.title.rendered,
       description: description,
       images: [ogUrl.toString()],

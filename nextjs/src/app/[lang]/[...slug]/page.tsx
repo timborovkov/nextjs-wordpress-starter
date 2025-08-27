@@ -1,7 +1,10 @@
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { findPostByPath, getWebsiteSettings } from "@/lib/wordpress";
-import { Section, Container, Prose } from "@/components/craft";
+import { Metadata } from 'next';
+
+import { notFound } from 'next/navigation';
+
+import { findPostByPath, getWebsiteSettings } from '@/lib/wordpress';
+
+import { Container, Prose, Section } from '@/components/craft';
 
 // Revalidate every hour
 export const revalidate = 3600;
@@ -33,14 +36,14 @@ export default async function LanguagePage(props: PageProps) {
 
     // Construct the full path
     const path =
-      typeof params.slug === "string"
+      typeof params.slug === 'string'
         ? `${lang}/${params.slug}`
-        : `${lang}/${params.slug.join("/")}`;
+        : `${lang}/${params.slug.join('/')}`;
 
     // Find the post/page by path
     const post = await findPostByPath(path);
 
-    if (!post || "code" in post) {
+    if (!post || 'code' in post) {
       notFound();
     }
 
@@ -51,7 +54,7 @@ export default async function LanguagePage(props: PageProps) {
             <h1>{post.title.rendered}</h1>
             {post.excerpt?.rendered && (
               <div
-                className="text-lg text-gray-600 mb-6"
+                className='mb-6 text-lg text-gray-600'
                 dangerouslySetInnerHTML={{ __html: post.excerpt.rendered }}
               />
             )}
@@ -61,7 +64,7 @@ export default async function LanguagePage(props: PageProps) {
       </Section>
     );
   } catch (error) {
-    console.error("Error loading page:", error);
+    console.error('Error loading page:', error);
     notFound();
   }
 }
@@ -75,13 +78,13 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
   try {
     const path =
-      typeof params.slug === "string"
+      typeof params.slug === 'string'
         ? `${lang}/${params.slug}`
-        : `${lang}/${params.slug.join("/")}`;
+        : `${lang}/${params.slug.join('/')}`;
 
     const post = await findPostByPath(path);
 
-    if (!post || "code" in post) {
+    if (!post || 'code' in post) {
       return {
         title: `Page Not Found`,
       };
@@ -89,32 +92,32 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
     // Strip HTML tags for description and limit length
     const description = post.excerpt?.rendered
-      ? post.excerpt.rendered.replace(/<[^>]*>/g, "").trim()
+      ? post.excerpt.rendered.replace(/<[^>]*>/g, '').trim()
       : post.content.rendered
-          .replace(/<[^>]*>/g, "")
+          .replace(/<[^>]*>/g, '')
           .trim()
-          .slice(0, 200) + "...";
+          .slice(0, 200) + '...';
 
     return {
       title: post.title.rendered,
       description: description,
       openGraph: {
-        type: "article",
+        type: 'article',
         locale: lang,
         url: `${
-          process.env.NEXT_PUBLIC_BASE_URL || "https://example.com"
+          process.env.NEXT_PUBLIC_BASE_URL || 'https://example.com'
         }/${path}`,
         title: post.title.rendered,
         description: description,
       },
       twitter: {
-        card: "summary_large_image",
+        card: 'summary_large_image',
         title: post.title.rendered,
         description: description,
       },
     };
   } catch (error) {
-    console.error("Error generating metadata:", error);
+    console.error('Error generating metadata:', error);
     return {
       title: `Page | ${lang.toUpperCase()}`,
     };
@@ -135,21 +138,21 @@ export async function generateStaticParams() {
     const links = [];
 
     // Get all page links
-    const pages = await import("@/lib/wordpress").then((m) => m.getAllPages());
+    const pages = await import('@/lib/wordpress').then((m) => m.getAllPages());
     if (pages) {
       links.push(...pages.map((page) => page.link));
     }
 
     // Get all post links
-    const posts = await import("@/lib/wordpress").then((m) => m.getAllPosts());
+    const posts = await import('@/lib/wordpress').then((m) => m.getAllPosts());
     if (posts) {
       links.push(...posts.map((post) => post.link));
     }
 
     return links.map((link) => {
       const url = new URL(link);
-      const path = url.pathname.replace(/^\/|\/$/g, ""); // Remove leading and trailing slashes
-      const parts = path.split("/");
+      const path = url.pathname.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
+      const parts = path.split('/');
       const lang = parts[0];
       const slugParts = parts.slice(1);
 
@@ -159,7 +162,7 @@ export async function generateStaticParams() {
       };
     });
   } catch (error) {
-    console.error("Error generating static params:", error);
+    console.error('Error generating static params:', error);
     // Return empty array to allow dynamic generation
     return [];
   }
