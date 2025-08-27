@@ -349,3 +349,35 @@ export interface FindPostResponse extends Post {
   // This will include all standard post fields plus any additional fields
   // The actual structure depends on the post type and ACF fields
 }
+
+// Dictionary Translation Types
+export interface DictionaryLanguage {
+  code: string;
+  name: string;
+  flag: string;
+}
+
+export interface DictionaryTranslation {
+  [key: string]: string;
+}
+
+export interface DictionaryLanguageData {
+  language: DictionaryLanguage;
+  translations: DictionaryTranslation;
+  count: number;
+}
+
+export interface DictionaryResponse {
+  language: string;
+  translations: DictionaryTranslation;
+  count: number;
+  timestamp: number;
+  cache_key: string;
+}
+
+export interface DictionaryAllLanguagesResponse {
+  languages: Record<string, DictionaryLanguage>;
+  translations: Record<string, DictionaryLanguageData>;
+  total_count: number;
+  timestamp: number;
+}

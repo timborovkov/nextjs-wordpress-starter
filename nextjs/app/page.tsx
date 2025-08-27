@@ -1,27 +1,19 @@
-import { redirect } from "next/navigation";
-import { getWebsiteSettings } from "@/lib/wordpress";
+import { Section, Container, Prose } from "@/components/craft";
 
 // Revalidate every hour
 export const revalidate = 3600;
 
 export default async function RootPage() {
-  try {
-    // Get website settings to determine default language
-    const settings = await getWebsiteSettings();
-
-    // Find the default language
-    const defaultLanguage = settings.languages.find((lang) => lang.is_default);
-
-    if (defaultLanguage) {
-      // Redirect to the default language home page
-      redirect(`/${defaultLanguage.code}`);
-    } else {
-      // Fallback to English if no default language found
-      redirect("/en");
-    }
-  } catch (error) {
-    console.error("Error getting website settings:", error);
-    // Fallback redirect to English
-    redirect("/en");
-  }
+  // This page should never be reached because middleware handles locale routing
+  // But we'll show a fallback just in case
+  return (
+    <Section>
+      <Container>
+        <Prose>
+          <h1>Loading...</h1>
+          <p>Please wait while we redirect you to your preferred language.</p>
+        </Prose>
+      </Container>
+    </Section>
+  );
 }

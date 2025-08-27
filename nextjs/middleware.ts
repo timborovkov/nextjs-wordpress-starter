@@ -1,26 +1,49 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { getAllDictionaryTranslations } from "./lib/wordpress";
 
-import type { Locale } from "@/lib/dict";
-import { defaultLocale, detectLocaleFromURL, languages } from "@/lib/dict";
-
-// List of available locales
-const locales = languages.map((lang) => lang.code);
+// Type for available locales
+type Locale = string;
 
 /**
- * Get the preferred locale from the Accept-Language header
- * @param request - The request object
- * @returns The users preferred locale
+ * Fetch available locales from WordPress
+ * @returns Promise<{ locales: string[], defaultLocale: string }>
  */
-function getLocaleFromHeader(request: NextRequest): Locale {
-  const acceptLanguage = request.headers.get("accept-language");
+async function getAvailableLocales() {
+  try {
+    const response = await getAllDictionaryTranslations();
+    const locales = Object.values(response.languages).map(
+      (lang: any) => lang.code
+    );
 
-  const preferredLocale: Locale | null = acceptLanguage
-    ?.split(",")
-    .map((lang) => lang.split(";")[0].trim())
-    .find((lang) => locales.includes(lang as Locale)) as Locale;
+    // Use the first locale as default (or fallback to "en")
+    const defaultLocale = locales[0] || "en";
 
-  return preferredLocale ?? defaultLocale;
+    return { locales, defaultLocale };
+  } catch (error) {
+    console.warn(
+      "Failed to fetch locales from WordPress, using fallback:",
+      error
+    );
+    return { locales: ["en"], defaultLocale: "en" };
+  }
+}
+
+/**
+ * Detect locale from URL path
+ * @param url - The request URL
+ * @returns The locale from the URL or null if not found
+ */
+function detectLocaleFromURL(url: string): Locale | null {
+  const pathname = new URL(url).pathname;
+  const segments = pathname.split("/").filter(Boolean);
+
+  // If first segment looks like a locale (2-3 character code), return it
+  if (segments.length > 0 && /^[a-z]{2,3}$/.test(segments[0])) {
+    return segments[0];
+  }
+
+  return null;
 }
 
 /**
@@ -30,8 +53,8 @@ function getLocaleFromHeader(request: NextRequest): Locale {
  */
 function getLocaleFromCookies(request: NextRequest): Locale | null {
   const cookieLocale = request.cookies.get("locale")?.value;
-  if (cookieLocale && locales.includes(cookieLocale as Locale)) {
-    return cookieLocale as Locale;
+  if (cookieLocale && /^[a-z]{2,3}$/.test(cookieLocale)) {
+    return cookieLocale;
   }
   return null;
 }
@@ -60,33 +83,49 @@ function setLocaleCookie(response: NextResponse, locale: Locale) {
  *
  * {@link https://nextjs.org/docs/app/building-your-application/routing/middleware}
  */
-export default function middleware(req: NextRequest) {
+export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // If accessing /api routes, skip the rest of the middleware
   if (pathname.startsWith("/api")) return NextResponse.next();
 
+  // Get available locales from WordPress
+  const { locales, defaultLocale } = await getAvailableLocales();
+
   // Get locale from the URL using the detectLocaleFromURL function
   const urlLocale = detectLocaleFromURL(req.url);
 
-  // Get the locale from cookies or headers as fallback
-  let locale = getLocaleFromCookies(req);
-  if (!locale) {
-    locale = getLocaleFromHeader(req);
-  }
-
-  const response = NextResponse.next();
-
-  // If URL has a locale, use it and update the cookie
+  // If URL has a locale, validate it and use it
   if (urlLocale) {
-    setLocaleCookie(response, urlLocale);
-    return response;
+    // Check if the URL locale is valid
+    if (locales.includes(urlLocale)) {
+      const response = NextResponse.next();
+      setLocaleCookie(response, urlLocale);
+      return response;
+    } else {
+      // Invalid locale in URL, redirect to default
+      const response = NextResponse.redirect(
+        new URL(`/${defaultLocale}${pathname}`, req.url)
+      );
+      setLocaleCookie(response, defaultLocale);
+      return response;
+    }
   }
 
-  // Redirect to the correct locale if not found in the URL
-  req.nextUrl.pathname = `/${locale}${pathname}`;
-  setLocaleCookie(response, locale);
-  return NextResponse.redirect(req.nextUrl);
+  // No locale in URL, get from cookies or use default
+  let locale = getLocaleFromCookies(req);
+
+  // Validate cookie locale
+  if (!locale || !locales.includes(locale)) {
+    locale = defaultLocale;
+  }
+
+  // Redirect to the correct locale
+  const response = NextResponse.redirect(
+    new URL(`/${locale}${pathname}`, req.url)
+  );
+  setLocaleCookie(response, locale as string);
+  return response;
 }
 
 /**

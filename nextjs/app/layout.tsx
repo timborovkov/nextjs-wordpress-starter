@@ -18,6 +18,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 import type { Metadata } from "next";
+import { LocaleProvider } from "@/context/LocaleContext";
+import { getAllDictionaryTranslations } from "@/lib/wordpress";
+import type {
+  DictionaryLanguage,
+  DictionaryTranslation,
+} from "@/lib/wordpress.d";
 
 const font = FontSans({
   subsets: ["latin"],
@@ -25,7 +31,7 @@ const font = FontSans({
 });
 
 export const metadata: Metadata = {
-  title: "WordPress & Next.js Starter by 9d8",
+  title: "WordPress & Next.js Starter by Tim Borovkov",
   description:
     "A starter template for Next.js with WordPress as a headless CMS.",
   metadataBase: new URL(siteConfig.site_domain),
@@ -34,25 +40,65 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+// Fetch locales and dictionaries at build time
+async function getLocalesAndDictionaries() {
+  try {
+    const response = await getAllDictionaryTranslations();
+    const availableLocales = Object.values(response.languages);
+    const dictionaries: Record<string, DictionaryTranslation> = {};
+
+    // Build dictionaries object
+    Object.entries(response.translations).forEach(([langCode, langData]) => {
+      if (
+        langData &&
+        typeof langData === "object" &&
+        "translations" in langData
+      ) {
+        dictionaries[langCode] = langData.translations as DictionaryTranslation;
+      }
+    });
+
+    return { availableLocales, dictionaries };
+  } catch (error) {
+    console.warn("Failed to fetch locales and dictionaries:", error);
+    // Return fallback data
+    return {
+      availableLocales: [
+        { code: "en", name: "English", flag: "🇺🇸" },
+      ] as DictionaryLanguage[],
+      dictionaries: {
+        en: {} as DictionaryTranslation,
+      },
+    };
+  }
+}
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const { availableLocales, dictionaries } = await getLocalesAndDictionaries();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={cn("min-h-screen font-sans antialiased", font.variable)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+        <LocaleProvider
+          availableLocales={availableLocales}
+          dictionaries={dictionaries}
         >
-          <Nav />
-          {children}
-          <Footer />
-        </ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Nav />
+            {children}
+            <Footer />
+          </ThemeProvider>
+        </LocaleProvider>
         <Analytics />
       </body>
     </html>

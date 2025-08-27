@@ -14,6 +14,8 @@ import type {
   PostWithACF,
   PageWithACF,
   FindPostResponse,
+  DictionaryResponse,
+  DictionaryAllLanguagesResponse,
 } from "./wordpress.d";
 
 const baseUrl = process.env.WORDPRESS_URL;
@@ -469,6 +471,38 @@ export async function getPostsByAuthorPaginated(
   return wordpressFetchWithPagination<PostWithACF[]>(
     "/wp-json/wp/v2/posts",
     query
+  );
+}
+
+// Dictionary Translation Functions
+
+/**
+ * Get dictionary translations for a specific language
+ * @param lang - Language code (e.g., 'en', 'fi'). If not provided, uses current language
+ * @returns Promise<DictionaryResponse>
+ */
+export async function getDictionaryTranslations(
+  lang?: string
+): Promise<DictionaryResponse> {
+  const query: Record<string, any> = {};
+
+  if (lang) {
+    query.lang = lang;
+  }
+
+  return wordpressFetch<DictionaryResponse>(
+    "/wp-json/wp/v2/dictionary-translations",
+    query
+  );
+}
+
+/**
+ * Get all dictionary translations for all languages
+ * @returns Promise<DictionaryAllLanguagesResponse>
+ */
+export async function getAllDictionaryTranslations(): Promise<DictionaryAllLanguagesResponse> {
+  return wordpressFetch<DictionaryAllLanguagesResponse>(
+    "/wp-json/wp/v2/dictionary-translations/all"
   );
 }
 

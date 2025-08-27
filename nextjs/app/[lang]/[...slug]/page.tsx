@@ -25,6 +25,12 @@ export default async function LanguagePage(props: PageProps) {
   const lang = params.lang;
 
   try {
+    // First validate that the language exists in our settings
+    const settings = await getWebsiteSettings();
+    if (!settings.languages.find((l) => l.code === lang)) {
+      notFound();
+    }
+
     // Construct the full path
     const path =
       typeof params.slug === "string"
