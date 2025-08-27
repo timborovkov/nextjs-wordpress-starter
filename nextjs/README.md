@@ -1,36 +1,8 @@
-# Next.js Starter for WordPress Headless CMS
+# Next.js Frontend
 
-> [Watch the Demo Video](https://www.youtube.com/watch?v=JZc1-BcOvYw)
->
-> [Need a headless theme? Use 761](https://github.com/9d8dev/761)
+This directory contains the Next.js 15 frontend application that consumes data from the WordPress headless CMS via the REST API.
 
-![CleanShot 2025-01-07 at 23 18 41@2x](https://github.com/user-attachments/assets/8b268c36-eb0d-459f-b9f1-b5f129bd29bc)
-
-[![Deploy with Vercel](https://vercel.com/button)](<https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2F9d8dev%2Fnext-wp&env=WORDPRESS_URL,WORDPRESS_HOSTNAME,WORDPRESS_WEBHOOK_SECRET&envDescription=Add%20WordPress%20URL%20with%20Rest%20API%20enabled%20(ie.%20https%3A%2F%2Fwp.example.com)%2C%20the%20hostname%20for%20Image%20rendering%20in%20Next%20JS%20(ie.%20wp.example.com)%2C%20and%20a%20secret%20key%20for%20secure%20revalidation&project-name=next-wp&repository-name=next-wp&demo-title=Next%20JS%20and%20WordPress%20Starter&demo-url=https%3A%2F%2Fwp.9d8.dev>)
-
-This is a starter template for building a Next.js application that fetches data from a WordPress site using the WordPress REST API. The template includes functions for fetching posts, categories, tags, authors, and featured media from a WordPress site and rendering them in a Next.js application.
-
-`next-wp` is built with [Next.js 15](https://nextjs.org/docs), [React](https://react.dev/), [Typescript](https://www.typescriptlang.org/docs/), [Tailwind](https://tailwindcss.com/), [shadcn/ui](https://ui.shadcn.com/docs), and [brijr/craft](https://github.com/brijr/craft). It pairs nicely with [brijr/components](https://components.bridger.to/) for a rapid development experience. Built by Cameron and Bridger at [9d8](https://9d8.dev).
-
-## Table of Contents
-
-- [Next.js Starter for WordPress Headless CMS](#nextjs-starter-for-wordpress-headless-cms)
-  - [Table of Contents](#table-of-contents)
-  - [Overview](#overview)
-  - [WordPress Functions](#wordpress-functions)
-  - [Pagination System](#pagination-system)
-  - [WordPress Types](#wordpress-types)
-  - [Post Card Component](#post-card-component)
-  - [Filter Component](#filter-component)
-  - [Dynamic Sitemap](#dynamic-sitemap)
-  - [Dynamic OG Images](#dynamic-og-images)
-  - [Revalidation Setup](#revalidation-setup)
-  - [Search Functionality](#search-functionality)
-  - [AI Assistant Guidelines](#ai-assistant-guidelines)
-
-## Overview
-
-### What's included?
+## What's Included
 
 ✅ Type-safe data layer with the WordPress RestAPI<br>
 ✅ Efficient server-side pagination system<br>
@@ -51,7 +23,7 @@ This is a starter template for building a Next.js application that fetches data 
 ✅ shadcn/ui components and theming<br>
 ✅ Vercel analytics<br>
 
-### Important files
+## Important Files
 
 - `lib/wordpress.ts` -> Functions for fetching WordPress CMS via Rest API with cache tags
 - `lib/wordpress.d.ts` -> Type declarations for the WordPress Rest API
@@ -62,6 +34,8 @@ This is a starter template for building a Next.js application that fetches data 
 - `menu.config.ts` -> Site nav menu configuration for desktop and mobile
 - `site.config.ts` -> Configuration for `sitemap.ts` and more
 - `app/sitemap.ts` -> Dynamically generated sitemap
+
+## Environment Variables
 
 The following environment variables are required in your `.env.local` file:
 
@@ -140,11 +114,7 @@ All functions use the custom `WordPressAPIError` class for consistent error hand
 
 ```typescript
 class WordPressAPIError extends Error {
-  constructor(
-    message: string,
-    public status: number,
-    public endpoint: string,
-  ) {
+  constructor(message: string, public status: number, public endpoint: string) {
     super(message);
     this.name = "WordPressAPIError";
   }
@@ -199,7 +169,7 @@ Instead of fetching all posts and paginating client-side, the `getPostsPaginated
 const response = await getPostsPaginated(2, 10, {
   author: "123",
   category: "news",
-  search: "nextjs"
+  search: "nextjs",
 });
 
 const { data: posts, headers } = response;
@@ -212,10 +182,10 @@ The `getPostsPaginated` function returns a `WordPressResponse<Post[]>` object:
 
 ```typescript
 interface WordPressResponse<T> {
-  data: T;                    // The actual posts array
+  data: T; // The actual posts array
   headers: {
-    total: number;            // Total number of posts matching the query
-    totalPages: number;       // Total number of pages
+    total: number; // Total number of posts matching the query
+    totalPages: number; // Total number of pages
   };
 }
 ```
@@ -237,11 +207,17 @@ For existing implementations using `getAllPosts`, you can migrate to the more ef
 const allPosts = await getAllPosts({ author, category });
 const page = 1;
 const postsPerPage = 9;
-const paginatedPosts = allPosts.slice((page - 1) * postsPerPage, page * postsPerPage);
+const paginatedPosts = allPosts.slice(
+  (page - 1) * postsPerPage,
+  page * postsPerPage
+);
 const totalPages = Math.ceil(allPosts.length / postsPerPage);
 
 // After: Server-side pagination
-const { data: posts, headers } = await getPostsPaginated(page, postsPerPage, { author, category });
+const { data: posts, headers } = await getPostsPaginated(page, postsPerPage, {
+  author,
+  category,
+});
 const { total, totalPages } = headers;
 ```
 
@@ -256,23 +232,21 @@ export default async function PostsPage({ searchParams }) {
   const postsPerPage = 9;
 
   // Efficient server-side pagination
-  const { data: posts, headers } = await getPostsPaginated(
-    page,
-    postsPerPage,
-    {
-      author: params.author,
-      category: params.category,
-      tag: params.tag,
-      search: params.search
-    }
-  );
+  const { data: posts, headers } = await getPostsPaginated(page, postsPerPage, {
+    author: params.author,
+    category: params.category,
+    tag: params.tag,
+    search: params.search,
+  });
 
   const { total, totalPages } = headers;
 
   return (
     <div>
       <p>{total} posts found</p>
-      {posts.map(post => <PostCard key={post.id} post={post} />)}
+      {posts.map((post) => (
+        <PostCard key={post.id} post={post} />
+      ))}
       {totalPages > 1 && <PaginationComponent />}
     </div>
   );
@@ -294,7 +268,7 @@ The pagination system includes sophisticated cache tags for optimal performance:
 
 ```typescript
 // Dynamic cache tags based on query parameters
-["wordpress", "posts", "posts-page-1", "posts-category-123"]
+["wordpress", "posts", "posts-page-1", "posts-category-123"];
 ```
 
 This ensures that when content changes, only the relevant pagination pages are revalidated, maintaining excellent performance even with large content sets.
@@ -446,7 +420,7 @@ Located in `components/posts/search-input.tsx`, the SearchInput component provid
 // Usage example
 import { SearchInput } from "@/components/posts/search-input";
 
-<SearchInput defaultValue={search} />
+<SearchInput defaultValue={search} />;
 ```
 
 Features:
@@ -551,15 +525,18 @@ This starter implements an intelligent caching and revalidation system using Nex
 The WordPress API functions use a sophisticated hierarchical cache tag system for granular revalidation:
 
 #### Global Tags
+
 - `wordpress` - Affects all WordPress content
 
 #### Content Type Tags
+
 - `posts` - All post content
 - `categories` - All category content
 - `tags` - All tag content
 - `authors` - All author content
 
 #### Pagination-Specific Tags
+
 - `posts-page-1`, `posts-page-2`, etc. - Individual pagination pages
 - `posts-search` - Search result pages
 - `posts-author-123` - Posts filtered by specific author
@@ -567,6 +544,7 @@ The WordPress API functions use a sophisticated hierarchical cache tag system fo
 - `posts-tag-789` - Posts filtered by specific tag
 
 #### Individual Item Tags
+
 - `post-123` - Specific post content
 - `category-456` - Specific category content
 - `tag-789` - Specific tag content
