@@ -64,5 +64,6 @@ add_action('rest_api_init', function () {
     register_rest_route('wp/v2', '/find-post', array(
         'methods'  => 'GET',
         'callback' => 'get_post_by_full_path',
+        'permission_callback' => '__return_true',
     ));
 });
