@@ -50,6 +50,27 @@ This project is built on top of the excellent [next-wp](https://github.com/9d8de
 
 We've extended their excellent foundation with additional features and modern tooling to create an even more comprehensive starting point.
 
+## 📦 What's Included
+
+✅ Type-safe data layer with the WordPress RestAPI<br>
+✅ Efficient server-side pagination system<br>
+✅ WordPress Plugin for revalidation<br>
+✅ Granular access to revalidation and cache tags<br>
+✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags<br>
+✅ Easy integration with custom post types and ACF<br>
+✅ Dynamic routes for Posts and Pages<br>
+✅ Design system for layout and prose styling ([craft-ds.com](https://craft-ds.com))<br>
+✅ Filter, Search, and Card components<br>
+✅ Dynamically rendered sitemap<br>
+✅ Dynamically generated metadata<br>
+✅ Dynamically generated OG/Twitter Cards for Posts and pages<br>
+✅ Responsive Nav and Footer components<br>
+✅ Site configuration file<br>
+✅ Menu configuration file<br>
+✅ Lite and dark mode support<br>
+✅ shadcn/ui components and theming<br>
+✅ Vercel analytics<br>
+
 ## ✨ What We've Added
 
 ### 🌍 Localization with Polylang
@@ -59,7 +80,13 @@ We've extended their excellent foundation with additional features and modern to
 - **Localized content fetching** from WordPress
 - **SEO-friendly language switching** with proper hreflang tags
 
-### 🎨 Tailwind CSS v4
+### 📦 Yoast SEO
+
+- **Yoast SEO integration** for SEO-friendly content
+- **SEO-friendly content fetching** from WordPress
+- **SEO-friendly language switching** with proper hreflang tags
+
+### 🎨 Tailwind CSS v4 and shadcn/ui
 
 - **Latest Tailwind CSS v4** with improved performance
 - **CSS-in-JS approach** for better developer experience
@@ -68,6 +95,7 @@ We've extended their excellent foundation with additional features and modern to
 
 ### 🚀 Enhanced WordPress Setup
 
+- **Application passwords** for WordPress REST API authentication
 - **Custom post types** and taxonomies pre-configured
 - **Advanced Custom Fields (ACF)** integration examples
 - **Custom REST API endpoints** for extended functionality

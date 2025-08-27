@@ -14,6 +14,12 @@ import type {
 
 const baseUrl = process.env.WORDPRESS_URL;
 
+const username = process.env.WORDPRESS_USERNAME ?? "";
+const applicationPassword = process.env.WORDPRESS_APPLICATION_PASSWORD ?? "";
+const credentials = Buffer.from(`${username}:${applicationPassword}`).toString(
+  "base64"
+);
+
 if (!baseUrl) {
   throw new Error("WORDPRESS_URL environment variable is not defined");
 }
@@ -49,6 +55,7 @@ async function wordpressFetch<T>(
   const response = await fetch(url, {
     headers: {
       "User-Agent": userAgent,
+      Authorization: `Basic ${credentials}`,
     },
     next: {
       tags: ["wordpress"],
@@ -80,6 +87,7 @@ async function wordpressFetchWithPagination<T>(
   const response = await fetch(url, {
     headers: {
       "User-Agent": userAgent,
+      Authorization: `Basic ${credentials}`,
     },
     next: {
       tags: ["wordpress"],
@@ -154,6 +162,7 @@ export async function getPostsPaginated(
   const response = await fetch(url, {
     headers: {
       "User-Agent": userAgent,
+      Authorization: `Basic ${credentials}`,
     },
     next: {
       tags: cacheTags,

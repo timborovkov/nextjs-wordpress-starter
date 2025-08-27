@@ -37,7 +37,6 @@ Bedrock is a WordPress boilerplate designed for developers who wish to manage th
 - Simple WordPress configuration with environment-specific files
 - Environment variables with [Dotenv](https://github.com/vlucas/phpdotenv)
 - Autoloader for must-use plugins (allowing you to use regular plugins as mu-plugins)
-- Enhanced security (separated web root and secure passwords with [wp-password-bcrypt](https://github.com/roots/wp-password-bcrypt))
 
 ## Quick Start
 
@@ -116,8 +115,10 @@ Replace `your-deployment-url.com` with your actual domain name.
 
 The database includes a default user for initial access:
 
-- **Username:** `admin`
-- **Password:** `password`
+- **Email:** `nextjs-wordpress-starter@example.com`
+- **Username:** `r3ED9L0E8M`
+- **Password:** `no77kZ19FL52hepH5Pf7UvRKaP4`
+- **Application Password:** `GM4V CgcO Bxbj uxzK sIEL 6nHw`
 
 **Important:** Change this password immediately after setup for security.
 
@@ -209,6 +210,9 @@ Thanks to the entrypoint script, the **app** volume is automatically refreshed w
 Updating your WordPress version, or the version of any plugin, is best achieved by re-requiring the dependencies to install the latest versions or specific versions:
 
 ```bash
+# Update everything
+composer update
+
 # Update WordPress core
 composer require roots/wordpress -W
 

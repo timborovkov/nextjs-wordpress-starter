@@ -2,27 +2,6 @@
 
 This directory contains the Next.js 15 frontend application that consumes data from the WordPress headless CMS via the REST API.
 
-## What's Included
-
-✅ Type-safe data layer with the WordPress RestAPI<br>
-✅ Efficient server-side pagination system<br>
-✅ WordPress Plugin for revalidation<br>
-✅ Granular access to revalidation and cache tags<br>
-✅ Setup for all basic WordPress options: Posts, Pages, Authors, Categories, Tags<br>
-✅ Easy integration with custom post types and ACF<br>
-✅ Dynamic routes for Posts and Pages<br>
-✅ Design system for layout and prose styling ([craft-ds.com](https://craft-ds.com))<br>
-✅ Filter, Search, and Card components<br>
-✅ Dynamically rendered sitemap<br>
-✅ Dynamically generated metadata<br>
-✅ Dynamically generated OG/Twitter Cards for Posts and pages<br>
-✅ Responsive Nav and Footer components<br>
-✅ Site configuration file<br>
-✅ Menu configuration file<br>
-✅ Lite and dark mode support<br>
-✅ shadcn/ui components and theming<br>
-✅ Vercel analytics<br>
-
 ## Important Files
 
 - `lib/wordpress.ts` -> Functions for fetching WordPress CMS via Rest API with cache tags
@@ -43,29 +22,15 @@ The following environment variables are required in your `.env.local` file:
 WORDPRESS_URL="https://wordpress.com"
 WORDPRESS_HOSTNAME="wordpress.com"
 WORDPRESS_WEBHOOK_SECRET="your-secret-key-here"
+WORDPRESS_USERNAME="your_username"
+WORDPRESS_APPLICATION_PASSWORD="your_application_password"
 ```
 
-You can find the example of `.env.local` file in the `.env.example` file (and in Vercel).
+You can find the example of `.env.local` file in the `.env.example` file.
 
 ## WordPress Functions
 
 The `lib/wordpress.ts` file contains a comprehensive set of functions for interacting with the WordPress REST API. Each function is optimized for Next.js 15's caching system and includes proper error handling.
-
-### Core Functionality
-
-```typescript
-// Default fetch options for all WordPress API calls
-const defaultFetchOptions = {
-  next: {
-    tags: ["wordpress"],
-    revalidate: 3600, // 1 hour cache
-  },
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-};
-```
 
 ### Available Functions
 
@@ -616,16 +581,6 @@ revalidateTag("posts-search");
 
 This system ensures your content stays fresh while maintaining optimal performance through intelligent caching.
 
-## AI Assistant Guidelines
+## Credits
 
-This codebase includes a [CLAUDE.md](./CLAUDE.md) file that provides guidance to AI assistants (like Claude) when working with code in this repository. It contains:
-
-- Project architecture overview
-- Code style guidelines
-- Build and development commands
-- TypeScript and component patterns
-- Environment variable configuration
-
-This ensures AI assistants maintain consistency and follow project conventions when helping with development tasks.
-
-Built by [Bridger Tower](https://twitter.com/bridgertower) and [Cameron Youngblood](https://twitter.com/youngbloodcyb) at [9d8](https://9d8.dev)
+Huge thanks for building the foundation of this project ([next-wp](https://github.com/9d8dev/next-wp)) to the team at [Bridger Tower](https://twitter.com/bridgertower) and [Cameron Youngblood](https://twitter.com/youngbloodcyb).
