@@ -7,7 +7,6 @@ import type {
   Post,
   Category,
   Tag,
-  Page,
   Author,
   FeaturedMedia,
   WebsiteSettings,
