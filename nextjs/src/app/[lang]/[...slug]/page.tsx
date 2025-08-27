@@ -2,7 +2,12 @@ import { Metadata } from 'next';
 
 import { notFound } from 'next/navigation';
 
-import { findPostByPath, getWebsiteSettings } from '@/lib/wordpress';
+import {
+  findPostByPath,
+  getAllPages,
+  getAllPosts,
+  getWebsiteSettings,
+} from '@/lib/wordpress';
 
 import { Container, Prose, Section } from '@/components/craft';
 
@@ -134,17 +139,16 @@ export const dynamicParams = false;
  */
 export async function generateStaticParams() {
   try {
-    const settings = await getWebsiteSettings();
     const links = [];
 
     // Get all page links
-    const pages = await import('@/lib/wordpress').then((m) => m.getAllPages());
+    const pages = await getAllPages();
     if (pages) {
       links.push(...pages.map((page) => page.link));
     }
 
     // Get all post links
-    const posts = await import('@/lib/wordpress').then((m) => m.getAllPosts());
+    const posts = await getAllPosts();
     if (posts) {
       links.push(...posts.map((post) => post.link));
     }
