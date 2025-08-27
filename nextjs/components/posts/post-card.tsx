@@ -69,6 +69,7 @@ export async function PostCard({ post }: { post: Post }) {
         <hr />
         <div className="flex justify-between items-center text-xs">
           <p>{category?.name || "Uncategorized"}</p>
+          <p>{author?.name || "Unknown Author"}</p>
           <p>{date}</p>
         </div>
       </div>
