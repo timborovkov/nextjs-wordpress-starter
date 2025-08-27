@@ -1,5 +1,13 @@
 # Tim's Next.js WordPress Starter
 
+> **🚧 WORK IN PROGRESS** 🚧
+>
+> This project is currently under active development. Some features may be incomplete or subject to change.
+>
+> **Questions or feature requests?** Ping me on [X (Twitter)](https://x.com/timborovkov) - I'd love to hear from you!
+
+---
+
 A comprehensive starter template for building modern headless CMS applications using **WordPress (Bedrock)** and **Next.js 15**. This project provides everything you need to get started with a production-ready headless WordPress setup, including localization, modern tooling, and pre-configured components.
 
 ## 🚀 What This Project Is
