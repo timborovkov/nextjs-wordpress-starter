@@ -15,6 +15,9 @@ require get_template_directory() . '/inc/fields.php';
 // Register custom options pages
 require get_template_directory() . '/inc/options.php';
 
+// Load dictionaries admin page
+require get_template_directory() . '/inc/admin/dictionaries-page.php';
+
 // Register menus
 require get_template_directory() . '/inc/menus.php';
 
