@@ -21,6 +21,7 @@ import { Button } from '@/components/ui/button';
 
 import { LocaleProvider } from '@/context/LocaleContext';
 
+import type { NavProps } from '@/types/nav';
 import type {
   DictionaryLanguage,
   DictionaryTranslation,

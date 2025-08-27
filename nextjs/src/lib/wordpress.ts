@@ -9,7 +9,6 @@ import type {
   DictionaryAllLanguagesResponse,
   DictionaryResponse,
   FeaturedMedia,
-  FindPostResponse,
   MenuItem,
   PageWithACF,
   Post,
@@ -61,7 +60,7 @@ export interface WordPressResponse<T> {
 // Keep original function for backward compatibility
 async function wordpressFetch<T>(
   path: string,
-  query?: Record<string, any>
+  query?: Record<string, string | number | boolean | null | undefined>
 ): Promise<T> {
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query)}` : ''
@@ -93,7 +92,7 @@ async function wordpressFetch<T>(
 // New function for paginated requests
 async function wordpressFetchWithPagination<T>(
   path: string,
-  query?: Record<string, any>
+  query?: Record<string, string | number | boolean | null | undefined>
 ): Promise<WordPressResponse<T>> {
   const url = `${baseUrl}${path}${
     query ? `?${querystring.stringify(query)}` : ''
@@ -141,7 +140,7 @@ export async function getPostsPaginated(
     search?: string;
   }
 ): Promise<WordPressResponse<PostWithACF[]>> {
-  const query: Record<string, any> = {
+  const query: Record<string, string | number | boolean | null | undefined> = {
     _embed: true,
     per_page: perPage,
     page,
@@ -211,7 +210,7 @@ export async function getAllPosts(filterParams?: {
   category?: string;
   search?: string;
 }): Promise<PostWithACF[]> {
-  const query: Record<string, any> = {
+  const query: Record<string, string | number | boolean | null | undefined> = {
     _embed: true,
     per_page: 100,
   };
@@ -372,8 +371,8 @@ export async function getMenuItems(menuSlug: string): Promise<MenuItem[]> {
 /**
  * Find a post by its full path (e.g., "en/developers/faq")
  */
-export async function findPostByPath(path: string): Promise<FindPostResponse> {
-  return wordpressFetch<FindPostResponse>('/wp-json/wp/v2/find-post', { path });
+export async function findPostByPath(path: string): Promise<PostWithACF> {
+  return wordpressFetch<PostWithACF>('/wp-json/wp/v2/find-post', { path });
 }
 
 export async function searchCategories(query: string): Promise<Category[]> {
@@ -488,7 +487,8 @@ export async function getPostsByAuthorPaginated(
 export async function getDictionaryTranslations(
   lang?: string
 ): Promise<DictionaryResponse> {
-  const query: Record<string, any> = {};
+  const query: Record<string, string | number | boolean | null | undefined> =
+    {};
 
   if (lang) {
     query.lang = lang;

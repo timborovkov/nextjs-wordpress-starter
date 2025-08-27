@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     try {
-      console.log(
+      console.warn(
         `Revalidating content: ${contentType}${
           contentId ? ` (ID: ${contentId})` : ''
         }`
