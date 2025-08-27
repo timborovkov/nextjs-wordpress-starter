@@ -47,7 +47,6 @@
     "roots/bedrock-disallow-indexing": "^2.0",
     "roots/wordpress": "^6.7",
     "roots/wp-config": "1.0.0",
-    "roots/wp-password-bcrypt": "1.2.0",
     "wpackagist-plugin/file-upload-types": "^1.5.0",
     "wpackagist-plugin/polylang": "^3.6.6",
     "wpackagist-plugin/query-monitor": "^3.17.2",
